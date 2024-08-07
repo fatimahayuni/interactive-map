@@ -2,7 +2,7 @@
 // Step 3: Write a function to generate random markers
 function getRandomLatLng(map) {
     // get the boundaries of the map
-    let bounds = map.getBounds();
+    // let bounds = map.getBounds();
     let southWest = bounds.getSouthWest();
     let northEast = bounds.getNorthEast();
     let lngSpan = northEast.lng - southWest.lng;
@@ -15,20 +15,19 @@ function getRandomLatLng(map) {
 }
 
 // Step 1
-let singapore = [1.3521, 103.8198]; // # Singapore latlang
-let map = L.map('map').setView(singapore, 13); // #2 Set the center point
+let denmark = [56.2639, 9.5018]; // # Singapore latlang
+let map = L.map('map').setView(denmark, 13); // #2 Set the center point
 
 // Step 2: setup the tile layers
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>' }).addTo(map);
 
 
 // Step 4: create marker cluster
-function markerCluster(markerClusterLayer, num) {
+function markerCluster(markerClusterLayer, num, bounds) {
     for (let i = 0; i < num; i++) {
-        let pos = getRandomLatLng(map);
+        let pos = getRandomLatLng(bounds);
         L.marker(pos).addTo(markerClusterLayer);
     }
-    markerClusterLayer.addTo(map);
 }
 
 // Create five marker cluster groups with different numbers of markers
@@ -38,8 +37,18 @@ let markerClusterLayer3 = L.markerClusterGroup();
 let markerClusterLayer4 = L.markerClusterGroup();
 let markerClusterLayer5 = L.markerClusterGroup();
 
-markerCluster(markerClusterLayer1, 50);
-markerCluster(markerClusterLayer2, 75);
-markerCluster(markerClusterLayer3, 100);
-markerCluster(markerClusterLayer4, 125);
-markerCluster(markerClusterLayer5, 150);
+let bounds = map.getBounds().pad(0.5); // extend the bounds to avoid overlapping markers
+
+
+markerCluster(markerClusterLayer1, 50, bounds);
+markerCluster(markerClusterLayer2, 75, bounds);
+// markerCluster(markerClusterLayer3, 100, bounds);
+// markerCluster(markerClusterLayer4, 125, bounds);
+// markerCluster(markerClusterLayer5, 10, bounds);
+
+// Add each cluster group to the map
+markerClusterLayer1.addTo(map);
+markerClusterLayer2.addTo(map);
+markerClusterLayer3.addTo(map);
+markerClusterLayer4.addTo(map);
+markerClusterLayer5.addTo(map);
